@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Happy Birthday Shivam!!</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/landing-page.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+        <div class="container topnav">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand topnav" href="#">It's your 22nd and you're a grown man now!</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#about"></a>
+                    </li>
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+    <!-- Header -->
+    <a name="about"></a>
+    <div class="intro-header">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-message">
+                        <h1>Happy Birthday Shivam!</h1>
+                        <h2>Hope you achieve great things this year and continue remain awesome </h2><br>
+                        <h3> And yes CS is cooler than IE </h3>
+                        <hr class="intro-divider">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.intro-header -->
+
+    <!-- Page Content -->
+
+
+    <!-- /.content-section-a -->
+
+
+    <!-- /.content-section-b -->
+
+
+    <!-- /.content-section-a -->
+
+
+    <!-- Education -->
+    <a name = "education"></a>
+    <div class="content-section-b">
+
+        <div class="container">
+
+            <div class="row">
+                <div class = "col-lg-12">
+                    <h2 class = "text-center">Word Cloud</h2>
+                </div>
+                <div class="col-lg-5 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+
+                    </p>
+                    <svg width="750" height="750" font-family="sans-serif" font-size="10" text-anchor="middle"></svg>
+                    <script src="https://d3js.org/d3.v4.min.js"></script>
+                    <script>
+
+                        var svg = d3.select("svg"),
+                            width = +svg.attr("width"),
+                            height = +svg.attr("height");
+
+                        var format = d3.format(",d");
+
+                        var color = d3.scaleOrdinal(d3.schemeCategory20c);
+
+                        var pack = d3.pack()
+                            .size([width, height])
+                            .padding(1.5);
+
+                        d3.csv("shivam.csv", function(d) {
+                            d.value = +d.value;
+                            if (d.value) return d;
+                        }, function(error, classes) {
+                            if (error) throw error;
+
+                            var root = d3.hierarchy({children: classes})
+                                .sum(function(d) { return d.value; })
+                                .each(function(d) {
+                                    if (id = d.data.id) {
+                                        var id, i = id.lastIndexOf(".");
+                                        d.id = id;
+                                        d.package = id.slice(0, i);
+                                        d.class = id.slice(i + 1);
+                                     }
+                                });
+
+                            var node = svg.selectAll(".node")
+                                .data(pack(root).leaves())
+                                .enter().append("g")
+                                .attr("class", "node")
+                                .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+                            node.append("circle")
+                                .attr("id", function(d) { return d.id; })
+                                .attr("r", function(d) { return d.r; })
+                                .style("fill", function(d) { return color(d.package); });
+
+                            node.append("clipPath")
+                                .attr("id", function(d) { return "clip-" + d.id; })
+                                .append("use")
+                                .attr("xlink:href", function(d) { return "#" + d.id; });
+
+                            node.append("text")
+                                .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
+                                .selectAll("tspan")
+                                .data(function(d) { return d.class.split(/(?=[A-Z][^A-Z])/g); })
+                                .enter().append("tspan")
+                                .attr("x", 0)
+                                .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
+                                .text(function(d) { return d; });
+
+                            node.append("title")
+                                .text(function(d) { return d.id + "\n" + format(d.value); });
+                        });
+
+                    </script>
+
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+
+	<a  name="contact"></a>
+    <div class="content-section-a">
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-lg-12,text-center">
+                  <p> PPP got moves</p>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/cAs_bNXJebY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                  </div>
+                  <div class="col-lg-12,text-center">
+                    <p> and so does Roquessan, no wonder they hooked up</p>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/QYX03m9A6M0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                  </div>
+                  <div class="col-lg-12,text-center">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/wXatolaugC0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                  </div>
+                  <div class="col-lg-12,text-center">
+                    <p> Let's go on more trips </p>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/njH8bYnK10U" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                  </div>
+                  <div class="col-lg-12,text-center">
+                    <p> Keep doing your thing </p>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/50QEoLh6igo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+
+            </div>
+
+        </div>
+                <!-- /.container -->
+
+    </div>
+    <!-- /.banner -->
+    <style>
+        p {
+    text-align: center;
+    font-size: 20px;
+    }
+    </style>
+    <div class = "content-section-b">
+        <div class="container">
+            <div class ="row">
+                <div class ="col-lg-12,text-center">
+                    <p id="demo"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<p> I think this should suffice How much I Love You</p>-->
+    <!--<p id="demo"></p>-->
+
+    <script>
+        // Set the date we're counting down to
+        var countDownDate = new Date("Aug 25, 2019 00:00:00").getTime();
+
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+
+            // Get todays date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now an the count down date
+            var distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result in an element with id="demo"
+            document.getElementById("demo").innerHTML = "Until Next Time " + days + "d " + hours + "h "
+                + minutes + "m " + seconds + "s ";
+
+            // If the count down is over, write some text
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("demo").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+    </script>
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="list-inline">
+
+                    </ul>
+                    <p class="copyright text-muted small">Copyright &copy; Shivam's 21st. All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
